@@ -58,4 +58,16 @@ app.use(function (err, req, res, next) {
 });
 
 
-module.exports = app;
+//module.exports = app;
+
+var port = 1337;
+//app.set('port', process.env.PORT || 3000);
+var server = app.listen(port);
+//var serve = app.listen();
+var io = require('socket.io')(server);
+
+server.listen(port, function () {
+    console.log('Express server listening on port ' + port);
+});
+
+
