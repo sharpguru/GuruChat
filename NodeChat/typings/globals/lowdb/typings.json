@@ -1,0 +1,8 @@
+{
+  "resolution": "main",
+  "tree": {
+    "src": "https://raw.githubusercontent.com/DefinitelyTyped/DefinitelyTyped/acb5edf962060577cd4ff68bf2f42b1f8477a304/lowdb/index.d.ts",
+    "raw": "registry:dt/lowdb#0.15.0+20170308104825",
+    "typings": "https://raw.githubusercontent.com/DefinitelyTyped/DefinitelyTyped/acb5edf962060577cd4ff68bf2f42b1f8477a304/lowdb/index.d.ts"
+  }
+}

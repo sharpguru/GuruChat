@@ -4,6 +4,7 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var low = require('lowdb');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
@@ -64,10 +65,47 @@ var port = 1337;
 //app.set('port', process.env.PORT || 3000);
 var server = app.listen(port);
 //var serve = app.listen();
+
+module.exports = server;
+
 var io = require('socket.io')(server);
 
 server.listen(port, function () {
     console.log('Express server listening on port ' + port);
 });
 
+// database
+const db = low();
+db.defaults({ messages: [] }).write(); // create empty array of messages
+const uuid = require('uuid');
+
+
+//const postId = db.get('posts').push({ id: uuid(), title: 'low!' }).write().id
+//const post = db.get('posts').find({ id: postId }).value()
+
+
+io.on('connection', function (socket) {
+    console.log('a user connected');
+    var collection = db.get('messages').takeRight(10).value();
+    console.log(collection);
+    console.log('db state:');
+    console.log(db.getState());
+    //var stream = collection.stream();
+    //stream.on('data', function (chat) { socket.emit('chat', chat.msg); });
+    collection.forEach(chat => {
+        console.log("sending old message... " + chat.msg);
+        socket.emit('chat', chat.msg);
+    });
+    socket.on('disconnect', function () {
+        console.log('user disconnected');
+    });
+    socket.on('chat', function (msg) {
+        socket.broadcast.emit('chat', msg);
+
+        console.log('pushing message: ' + msg);
+        //db.get('messages').push({ msg: msg, id: uuid() }).write();
+        db.get('messages').push({ msg: msg }).write();
+        console.log(db.getState());
+    });
+});
 
